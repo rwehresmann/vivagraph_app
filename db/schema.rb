@@ -10,18 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161217202033) do
+ActiveRecord::Schema.define(version: 20161217222921) do
 
   create_table "answers", force: :cascade do |t|
     t.boolean  "correct"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "user_id"
+    t.integer  "exercise_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["exercise_id"], name: "index_answers_on_exercise_id"
+    t.index ["user_id"], name: "index_answers_on_user_id"
   end
 
   create_table "exercises", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "exercises_users", force: :cascade do |t|
+    t.integer "exercise_id"
+    t.integer "user_id"
+    t.index ["exercise_id"], name: "index_exercises_users_on_exercise_id"
+    t.index ["user_id"], name: "index_exercises_users_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
