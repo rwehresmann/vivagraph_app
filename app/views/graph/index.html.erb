@@ -1,4 +1,5 @@
-<button id="pause" type="button">Pause</button>
+<button id="pause_resume" type="button">Pause</button><br></br>
+<button id="reset" type="button">Back to the center</button>
 
 <script type="text/javascript">
   $( document ).ready(function() {
@@ -12,8 +13,19 @@
        }
      });
 
-    $('#pause').click(function(){
-      pause();
+    $('#pause_resume').click(function(){
+      if ($(this).text() == "Pause") {
+        pause();
+        $(this).text("Resume");
+      }
+      else {
+        resume();
+        $(this).text("Pause");
+      }
+    });
+
+    $('#reset').click(function(){
+      reset();
     });
   });
 </script>

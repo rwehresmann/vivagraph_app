@@ -21,6 +21,16 @@ function pause() {
   renderer.pause();
 }
 
+// Resume the graph animation.
+function resume() {
+  renderer.resume();
+}
+
+// Reset the graph animation.
+function reset() {
+  renderer.reset();
+}
+
 // Node layout design.
 function NodeLayout(node) {
   var radius = 20;
