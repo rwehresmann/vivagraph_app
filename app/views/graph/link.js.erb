@@ -21,6 +21,8 @@ $('#link-container').on('hidden.bs.modal', function () {
 $("#link-container").html("<%= escape_javascript(render(partial: 'link_info', locals: { answer_1: @answer_1, answer_2: @answer_2 })) %>");
 $('#link-modal').modal('show');
 
+// When clicked delete link from graph.
 $("#link-delete").click(function() {
-  alert("oi")
+  deleteLink("#<%= @link_html_id %>");
+  $('#link-modal').modal('hide');
 });

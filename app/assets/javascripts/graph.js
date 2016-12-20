@@ -1,4 +1,5 @@
 var renderer;
+var graph;
 
 function main (answers) {
   var graphics = Viva.Graph.View.svgGraphics();
@@ -7,8 +8,8 @@ function main (answers) {
   graphics.link(linkLayout)
     .placeLink(placeLinkd);
 
-  var graph = Viva.Graph.graph();
-  randomConnections(graph, answers);
+  graph = Viva.Graph.graph();
+  generateRandomLinks(answers);
 
   renderer = Viva.Graph.View.renderer(graph, {
     graphics: graphics,
@@ -38,7 +39,7 @@ function linkLayout(link) {
   var ui = Viva.Graph.svg('path')
     .attr('stroke', 'black')
     .attr('stroke-width', 5)
-    .attr('id', 'link-' + link.data.answer_1.id + '-' + link.data.answer_2.id);
+    .attr('id', buildIdFromLinkObject(link));
   $(ui).dblclick(function() {
     $(this).attr('stroke', 'yellow');
     $.ajax({
@@ -57,7 +58,6 @@ function linkLayout(link) {
 // Node layout design.
 function nodeLayout(node) {
   var radius = 20;
-
   var ui = Viva.Graph.svg('g');
 
   var text_ui = Viva.Graph.svg('text')
@@ -103,7 +103,6 @@ function setNodeCollor(correct, selected = false) {
 
 // Node position.
 function placeNodeWithTransform(nodeUI, pos) {
-  // Shift image to let links go to the center:
   nodeUI.attr('transform', 'translate(' + (pos.x - 12) + ',' + (pos.y - 12) + ')');
 }
 
@@ -114,8 +113,8 @@ function placeLinkd(linkUI, fromPos, toPos) {
   linkUI.attr("d", data);
 }
 
-// Create random connections.
-function randomConnections(graph, answers, qt_connections = 50) {
+// Create random links.
+function generateRandomLinks(answers, qt_connections = 50) {
   for (i = 0; i < qt_connections; i ++) {
     answer_1 = randomAnswer(answers);
     answer_2 = randomAnswer(answers);
@@ -125,8 +124,21 @@ function randomConnections(graph, answers, qt_connections = 50) {
   }
 }
 
-// Select a random answer (used in randomConnections).
+// Select a random answer (used in generateRandomLinks).
 function randomAnswer(answers) {
   var idx = Math.floor((Math.random() * answers.length))
   return answers[idx]
+}
+
+function deleteLink(link_id) {
+  graph.forEachLink(function(link) {
+    if (("#" + buildIdFromLinkObject(link)) == link_id)
+      graph.removeLink(link);
+  });
+}
+
+// Build the link in the format used in graph.
+function buildIdFromLinkObject(link) {
+  if (link != undefined) // It seems that 'forEachLink' return always, at the end, an undefined object. 
+    return "link-" + link.data.answer_1.id + "-" + link.data.answer_2.id
 }
