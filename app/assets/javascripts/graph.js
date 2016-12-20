@@ -2,8 +2,10 @@ var renderer;
 
 function main (answers) {
   var graphics = Viva.Graph.View.svgGraphics();
-  graphics.node(NodeLayout)
+  graphics.node(nodeLayout)
     .placeNode(placeNodeWithTransform);
+  graphics.link(linkLayout)
+    .placeLink(placeLinkd);
 
   var graph = Viva.Graph.graph();
   randomConnections(graph, answers);
@@ -31,8 +33,16 @@ function reset() {
   renderer.reset();
 }
 
+// Link layout design.
+function linkLayout(link) {
+  var ui = Viva.Graph.svg('path')
+    .attr('stroke', 'black')
+    .attr('stroke-width', 3);
+  return ui;
+}
+
 // Node layout design.
-function NodeLayout(node) {
+function nodeLayout(node) {
   var radius = 20;
 
   var ui = Viva.Graph.svg('g');
@@ -56,7 +66,7 @@ function NodeLayout(node) {
     $(this).attr('fill', setNodeCollor(node.data.correct, true));
     $.ajax({
        type: "GET",
-       url: '/graph/1',
+       url: 'node',
        dataType: 'script',
        data: { answer: node.data, node_html_id: $(this).attr('id') }
      });
@@ -78,10 +88,17 @@ function setNodeCollor(correct, selected = false) {
   return "red"
 }
 
-// Needed to join the nodes with the links.
+// Node position.
 function placeNodeWithTransform(nodeUI, pos) {
   // Shift image to let links go to the center:
   nodeUI.attr('transform', 'translate(' + (pos.x - 12) + ',' + (pos.y - 12) + ')');
+}
+
+// Link position.
+function placeLinkd(linkUI, fromPos, toPos) {
+  var data = 'M' + (fromPos.x + 10) + ',' + (fromPos.y + 10) +
+             'L' + (toPos.x + 10) + ',' + (toPos.y + 10);
+  linkUI.attr("d", data);
 }
 
 // Create random connections.
