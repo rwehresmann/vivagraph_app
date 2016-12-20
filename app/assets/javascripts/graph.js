@@ -49,15 +49,16 @@ function NodeLayout(node) {
   var circle = Viva.Graph.svg('circle')
     .attr('cx', radius)
     .attr('cy', radius)
-    .attr('fill', setNodeCollor(node))
+    .attr('fill', setNodeCollor(node.data.correct))
     .attr('r', radius)
     .attr('id', 'node_' + node.data.id)
   $(circle).dblclick(function(){
+    $(this).attr('fill', setNodeCollor(node.data.correct, true));
     $.ajax({
        type: "GET",
        url: '/graph/1',
        dataType: 'script',
-       data: { answer: node.data }
+       data: { answer: node.data, node_html_id: $(this).attr('id') }
      });
   });
 
@@ -69,8 +70,10 @@ function NodeLayout(node) {
 }
 
 // Logic to set node color, according answer status.
-function setNodeCollor(node) {
-  if (node.data.correct)
+function setNodeCollor(correct, selected = false) {
+  if (selected)
+    return "yellow";
+  else if (correct)
     return "green"
   return "red"
 }

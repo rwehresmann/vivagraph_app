@@ -4,7 +4,8 @@ class GraphController < ApplicationController
 
   def show
     @answer = params[:answer]
-
+    @node_html_id = params[:node_html_id]
+    p @node_html_id.class
     respond_to do |format|
       format.js
     end
