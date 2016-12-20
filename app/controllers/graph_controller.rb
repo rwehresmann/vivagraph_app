@@ -11,6 +11,16 @@ class GraphController < ApplicationController
     end
   end
 
+  def link
+    @link_html_id = params[:link_html_id]
+    @answer_1 = params[:answer_1]
+    @answer_2 = params[:answer_2]
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
   # Build a nice data structure to use in graph.
   def data
     answers = []

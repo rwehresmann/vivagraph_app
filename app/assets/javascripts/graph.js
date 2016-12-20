@@ -37,7 +37,20 @@ function reset() {
 function linkLayout(link) {
   var ui = Viva.Graph.svg('path')
     .attr('stroke', 'black')
-    .attr('stroke-width', 3);
+    .attr('stroke-width', 5)
+    .attr('id', 'link-' + link.data.answer_1.id + '-' + link.data.answer_2.id);
+  $(ui).dblclick(function() {
+    $(this).attr('stroke', 'yellow');
+    $.ajax({
+       type: "GET",
+       url: 'link',
+       dataType: 'script',
+       data: { link_html_id: $(this).attr('id'),
+               answer_1: link.data.answer_1,
+               answer_2: link.data.answer_2
+             }
+     });
+  });
   return ui;
 }
 
@@ -108,7 +121,7 @@ function randomConnections(graph, answers, qt_connections = 50) {
     answer_2 = randomAnswer(answers);
     graph.addNode(answer_1.id, answer_1);
     graph.addNode(answer_2.id, answer_2);
-    graph.addLink(answer_1.id, answer_2.id);
+    graph.addLink(answer_1.id, answer_2.id, { answer_1: answer_1, answer_2: answer_2 });
   }
 }
 

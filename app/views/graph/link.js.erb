@@ -1,0 +1,26 @@
+// Create tag where link info will be displayed.
+var div = $(document.createElement('div')).attr('id', 'link-container');
+$('body').append(div);
+
+// Stop graph animation when modal is displayed.
+$('#link-container').on('show.bs.modal', function () {
+  pause();
+});
+
+// Resume graph animation when modal is closed.
+$('#link-container').on('hidden.bs.modal', function () {
+  $(div).remove();
+  resume();
+
+  if ($('#pause_resume').text() == "Resume")
+    $('#pause_resume').text("Pause");
+  $("#<%= @link_html_id %>").attr('stroke', 'black');
+});
+
+// Display modal with answer info.
+$("#link-container").html("<%= escape_javascript(render(partial: 'link_info', locals: { answer_1: @answer_1, answer_2: @answer_2 })) %>");
+$('#link-modal').modal('show');
+
+$("#link-delete").click(function() {
+  alert("oi")
+});
