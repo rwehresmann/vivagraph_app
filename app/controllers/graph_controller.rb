@@ -2,6 +2,14 @@ class GraphController < ApplicationController
   def index
   end
 
+  def show
+    @answer = params[:answer]
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
   # Build a nice data structure to use in graph.
   def data
     answers = []

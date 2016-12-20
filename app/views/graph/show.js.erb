@@ -1,0 +1,21 @@
+// Create tag where answer info will be displayed.
+var div = $(document.createElement('div')).attr('id', 'answer-container');
+$('body').append(div);
+
+// Stop graph animation when modal is displayed.
+$('#answer-container').on('show.bs.modal', function () {
+  pause();
+});
+
+// Resume graph animation when modal is closed.
+$('#answer-container').on('hidden.bs.modal', function () {
+  $(div).remove();
+  resume();
+
+  if ($('#pause_resume').text() == "Resume")
+    $('#pause_resume').text("Pause");
+});
+
+// Display modal with answer info.
+$("#answer-container").html("<%= escape_javascript(render(partial: 'answer_info', locals: { answer: @answer })) %>");
+$('#answer-modal').modal('show');

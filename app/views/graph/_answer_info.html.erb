@@ -1,0 +1,15 @@
+<div class="modal" id="answer-modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Answer information</h4>
+      </div>
+      <div class="modal-body">
+        <p><%= "#{answer[:user][:name]} answer to exercise #{answer[:exercise][:name]} is #{formated_correct(answer[:correct])}!" %></p>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>

@@ -51,10 +51,15 @@ function NodeLayout(node) {
     .attr('cy', radius)
     .attr('fill', setNodeCollor(node))
     .attr('r', radius)
-    .attr('id', 'node_' + node.data.id);
-  //$(circle).dbclick(function(){
-
-  //});
+    .attr('id', 'node_' + node.data.id)
+  $(circle).dblclick(function(){
+    $.ajax({
+       type: "GET",
+       url: '/graph/1',
+       dataType: 'script',
+       data: { answer: node.data }
+     });
+  });
 
   text_ui.append(span_ui);
   ui.append(text_ui);
