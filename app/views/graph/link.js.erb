@@ -12,8 +12,8 @@ $('#link-container').on('hidden.bs.modal', function () {
   $(div).remove();
   resume();
 
-  if ($('#pause_resume').text() == "Resume")
-    $('#pause_resume').text("Pause");
+  if ($('#pause-resume').text() == "Resume")
+    $('#pause-resume').text("Pause");
   $("#<%= @link_html_id %>").attr('stroke', 'black');
 });
 

@@ -1,31 +1,42 @@
-<button id="pause_resume" type="button">Pause</button><br></br>
-<button id="reset" type="button">Back to the center</button>
+<div id="menu" class="btn-group-vertical">
+  <button id="pause-resume" type="button" class="btn btn-secondary" title="Stop graph animation">
+    <i class="fa fa-pause"></i>
+  </button>
+  <button id="back-center" type="button" class="btn btn-secondary" title="Back to the graph center">
+    <i class="fa fa-crosshairs"></i>
+  </button>
+  <button id="new_graph" type="button" class="btn btn-secondary" title="Generate new graph">
+    <i class="fa fa-asterisk"></i>
+  </button>
+</div>
 
 <script type="text/javascript">
   $( document ).ready(function() {
-    $.ajax({
-       type: "GET",
-       contentType: "application/json; charset=utf-8",
-       url: 'data',
-       dataType: 'json',
-       success: function (data) {
-           main(data);
-       }
-     });
+    // Get data to place in graph.
+    getData();
 
-    $('#pause_resume').click(function(){
-      if ($(this).text() == "Pause") {
+    // Btn pause resume visual logic.
+    $('#pause-resume').click(function() {
+      if ($('#pause-resume i').attr('class') == "fa fa-pause") {
         pause();
-        $(this).text("Resume");
+        $('#pause-resume i').attr('class', 'fa fa-play');
+        $('#pause-resume i').attr('title', 'Resume graph animation');
       }
       else {
         resume();
-        $(this).text("Pause");
+        $('#pause-resume i').attr('class', 'fa fa-pause');
+        $('#pause-resume i').attr('title', "Stop graph animation");
       }
     });
 
-    $('#reset').click(function(){
+    $('#back-center').click(function(){
       reset();
+    });
+
+    // Generate a new graph.
+    $('#new_graph').click(function() {
+      dispose();
+      getData();
     });
   });
 </script>

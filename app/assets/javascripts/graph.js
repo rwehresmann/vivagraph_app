@@ -2,6 +2,7 @@ var renderer;
 var graph;
 
 function main (answers) {
+  console.log("oi")
   var graphics = Viva.Graph.View.svgGraphics();
   graphics.node(nodeLayout)
     .placeNode(placeNodeWithTransform);
@@ -17,6 +18,24 @@ function main (answers) {
   });
 
   renderer.run();
+}
+
+// Get data to place in graph.
+function getData() {
+  $.ajax({
+     type: "GET",
+     contentType: "application/json; charset=utf-8",
+     url: 'data',
+     dataType: 'json',
+     success: function (data) {
+         main(data);
+     }
+   });
+}
+
+// Drop the graph.
+function dispose() {
+  renderer.dispose();
 }
 
 // Pause the graph animation.
@@ -92,15 +111,6 @@ function nodeLayout(node) {
   return ui;
 }
 
-// Logic to set node color, according answer status.
-function setNodeCollor(correct, selected = false) {
-  if (selected)
-    return "yellow";
-  else if (correct)
-    return "green"
-  return "red"
-}
-
 // Node position.
 function placeNodeWithTransform(nodeUI, pos) {
   nodeUI.attr('transform', 'translate(' + (pos.x - 12) + ',' + (pos.y - 12) + ')');
@@ -111,6 +121,15 @@ function placeLinkd(linkUI, fromPos, toPos) {
   var data = 'M' + (fromPos.x + 10) + ',' + (fromPos.y + 10) +
              'L' + (toPos.x + 10) + ',' + (toPos.y + 10);
   linkUI.attr("d", data);
+}
+
+// Logic to set node color, according answer status.
+function setNodeCollor(correct, selected = false) {
+  if (selected)
+    return "yellow";
+  else if (correct)
+    return "green"
+  return "red"
 }
 
 // Create random links.
@@ -139,6 +158,6 @@ function deleteLink(link_id) {
 
 // Build the link in the format used in graph.
 function buildIdFromLinkObject(link) {
-  if (link != undefined) // It seems that 'forEachLink' return always, at the end, an undefined object. 
+  if (link != undefined) // It seems that 'forEachLink' return always, at the end, an undefined object.
     return "link-" + link.data.answer_1.id + "-" + link.data.answer_2.id
 }
