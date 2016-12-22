@@ -10,7 +10,9 @@ $('#link-container').on('show.bs.modal', function () {
 // Resume graph animation when modal is closed.
 $('#link-container').on('hidden.bs.modal', function () {
   $(div).remove();
-  resume();
+
+  if ($('#pause-resume i').attr('class') == 'fa fa-pause')
+    resume();
 
   if ($('#pause-resume').text() == "Resume")
     $('#pause-resume').text("Pause");

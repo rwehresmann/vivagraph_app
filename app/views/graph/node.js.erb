@@ -10,12 +10,10 @@ $('#answer-container').on('show.bs.modal', function () {
 // Resume graph animation when modal is closed.
 $('#answer-container').on('hidden.bs.modal', function () {
   $(div).remove();
-  resume();
 
-  if ($('#pause-resume i').attr('class') == "fa fa-play"){
-    $('#pause-resume i').attr('class', 'fa fa-pause');
-    $('#pause-resume i').attr('title', 'Stop graph animation'); 
-  }
+  if ($('#pause-resume i').attr('class') == 'fa fa-pause')
+    resume();
+
   $("#<%= @node_html_id %>").attr('fill', setNodeCollor("<%= @answer[:correct] %>"));
 });
 
