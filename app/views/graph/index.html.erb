@@ -8,6 +8,9 @@
   <button id="new_graph" type="button" class="btn btn-secondary" title="Generate new graph">
     <i class="fa fa-asterisk"></i>
   </button>
+  <button id="add-link" type="button" class="btn btn-secondary" title="Add a link between two nodes">
+    <i class="fa fa-plus-square"></i>
+  </button>
 </div>
 
 <script type="text/javascript">
@@ -37,6 +40,12 @@
     $('#new_graph').click(function() {
       dispose();
       getData();
+    });
+
+    $("#add-link").click(function(){
+      $("body").css("cursor","crosshair");
+      alert("Please, select two nodes to add the link or press ESC to cancel.")
+      addLink();
     });
   });
 </script>

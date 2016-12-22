@@ -1,8 +1,14 @@
+// Responsible for graph animation.
 var renderer;
+// The graph itself.
 var graph;
+// It's a status, and when true, means that is waiting for node selection.
+var selecting_nodes = false;
+// The selected nodes, filled when selecting_nodes is true.
+var selected_nodes = [];
 
-function main (answers) {
-  console.log("oi")
+// First method to be called.
+function main(answers) {
   var graphics = Viva.Graph.View.svgGraphics();
   graphics.node(nodeLayout)
     .placeNode(placeNodeWithTransform);
@@ -59,6 +65,7 @@ function linkLayout(link) {
     .attr('stroke', 'black')
     .attr('stroke-width', 5)
     .attr('id', buildIdFromLinkObject(link));
+
   $(ui).dblclick(function() {
     $(this).attr('stroke', 'yellow');
     $.ajax({
@@ -71,6 +78,7 @@ function linkLayout(link) {
              }
      });
   });
+
   return ui;
 }
 
@@ -94,6 +102,7 @@ function nodeLayout(node) {
     .attr('fill', setNodeCollor(node.data.correct))
     .attr('r', radius)
     .attr('id', 'node_' + node.data.id)
+
   $(circle).dblclick(function(){
     $(this).attr('fill', setNodeCollor(node.data.correct, true));
     $.ajax({
@@ -102,6 +111,21 @@ function nodeLayout(node) {
        dataType: 'script',
        data: { answer: node.data, node_html_id: $(this).attr('id') }
      });
+  });
+
+  $(circle).click(function() {
+    if (selecting_nodes) {
+      $(this).attr('fill', setNodeCollor(node.data.correct, true));
+      if (selected_nodes[0] == undefined)
+        selected_nodes[0] = node;
+      else if (selected_nodes[1] == undefined && node != selected_nodes[0]) {
+        selected_nodes[1] = node;
+        // The link is displayed only if the graph animation is activated once again.
+        informGraphPage();
+        addLink();
+        resetNodeSelection();
+      }
+    }
   });
 
   text_ui.append(span_ui);
@@ -121,6 +145,12 @@ function placeLinkd(linkUI, fromPos, toPos) {
   var data = 'M' + (fromPos.x + 10) + ',' + (fromPos.y + 10) +
              'L' + (toPos.x + 10) + ',' + (toPos.y + 10);
   linkUI.attr("d", data);
+}
+
+// When selection is ended, the nodes are filled again with their original collor.
+function changeSelectedNodesColor() {
+  for (var i in selected_nodes)
+    $("#node_" + selected_nodes[i].id).attr('fill', setNodeCollor(selected_nodes[i].data.correct));
 }
 
 // Logic to set node color, according answer status.
@@ -149,6 +179,8 @@ function randomAnswer(answers) {
   return answers[idx]
 }
 
+// Delete a link based in its html id (the only way to delete a link its with
+// the link object).
 function deleteLink(link_id) {
   graph.forEachLink(function(link) {
     if (("#" + buildIdFromLinkObject(link)) == link_id)
@@ -161,3 +193,39 @@ function buildIdFromLinkObject(link) {
   if (link != undefined) // It seems that 'forEachLink' return always, at the end, an undefined object.
     return "link-" + link.data.answer_1.id + "-" + link.data.answer_2.id
 }
+
+// Add the link or set the current status selecting_nodes to true.
+function addLink() {
+  if (selecting_nodes == false)
+    selecting_nodes = true
+  if (selected_nodes.length == 2)
+    graph.addLink(selected_nodes[0].data.id, selected_nodes[1].data.id, { answer_1: selected_nodes[0], answer_2: selected_nodes[1] });
+}
+
+// Drawback the node selection options (when adding a link).
+function resetNodeSelection() {
+  changeSelectedNodesColor();
+  selected_nodes = [];
+  selecting_nodes = false;
+}
+
+// When an ajax request is sended to graph page, that means that the node
+// selection state (to add a link) is ended, and the necessary layot adjustments can
+// be made.
+function informGraphPage() {
+  $.ajax({
+     type: "GET",
+     url: 'graph',
+     dataType: 'script'
+   });
+}
+
+// If selecting_nodes is true, ESC cancel the selection.
+$(document).keyup(function(e) {
+  if (selecting_nodes)
+    if (e.keyCode === 27) {
+      informGraphPage();
+      resetNodeSelection();
+      $('body').css('cursor', 'default');
+    }
+});
