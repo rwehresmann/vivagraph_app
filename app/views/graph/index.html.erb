@@ -44,7 +44,13 @@
 
     $("#add-link").click(function(){
       $("body").css("cursor","crosshair");
-      alert("Please, select two nodes to add the link or press ESC to cancel.")
+      console.log($('#select-info'))
+      // Check if doesn't exists already (more than one click in add link button).
+      if ($('#select-info').length <= 0) {
+        var div = $(document.createElement('div')).attr('id', 'select-info');
+        div.text("Please, select two nodes to add the link or press ESC to cancel.");
+        $('body').append(div);
+      }
       addLink();
     });
   });
