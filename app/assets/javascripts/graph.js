@@ -163,7 +163,7 @@ function setNodeCollor(correct, selected = false) {
 }
 
 // Create random links.
-function generateRandomLinks(answers, qt_connections = 50) {
+function generateRandomLinks(answers, qt_connections = 80) {
   for (i = 0; i < qt_connections; i ++) {
     answer_1 = randomAnswer(answers);
     answer_2 = randomAnswer(answers);
